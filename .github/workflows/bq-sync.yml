@@ -1,0 +1,24 @@
+name: Sync BigQuery on Main Merge
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync-bq:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+      with:
+        service_account_key: ${{ secrets.GCP_KEY }}
+        project_id: prime-buffer-462612-g0
+
+    - name: Run BigQuery SQL file
+      run: |
+        bq query --nouse_legacy_sql < your-sql-folder/update_table.sql
